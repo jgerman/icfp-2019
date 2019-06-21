@@ -40,6 +40,12 @@
                  obstacles
                  boosts])
 
+(defn new-task []
+  (-> {}
+      map->Task
+      (assoc :obstacles [])
+      (assoc :boosts [])))
+
 (defmulti apply-node (fn [task node] (first node)))
 
 (defmethod apply-node :MAP [task node]
@@ -65,8 +71,9 @@
 
 (defn read-task [task]
   (let [task-ast (task-parser task)]
-    (reduce apply-node (map->Task {}) task-ast)))
+    (reduce apply-node (new-task) task-ast)))
 
+;; i.e. (resource->task "part-1-initial/prob-001.desc")
 (defn resource->task [resource]
   (-> resource
       io/resource
