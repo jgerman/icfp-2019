@@ -6,20 +6,20 @@ I'd be happy to just get points on the board, and like other ICFP contests I'll 
 
 So far I've just parsed the task into a format I like. 
 
-
-`icfp-2019.core> (task/read-task sample-task)
+```clojure
+icfp-2019.core> (task/read-task sample-task)
 {:mine ({:x 0, :y 0} {:x 10, :y 0} {:x 10, :y 10} {:x 0, :y 10}),
- :start {:x 0, :y 0},
- :obstacles
- (({:x 5, :y 8} {:x 6, :y 8} {:x 6, :y 9} {:x 5, :y 9})
-  ({:x 4, :y 2} {:x 6, :y 2} {:x 6, :y 7} {:x 4, :y 7})),
- :boosts
- ({:type "X", :point {:x 0, :y 9}}
-  {:type "L", :point {:x 0, :y 3}}
-  {:type "F", :point {:x 1, :y 2}}
-  {:type "F", :point {:x 0, :y 2}}
-  {:type "B", :point {:x 1, :y 1}}
-  {:type "B", :point {:x 0, :y 1}})}
-icfp-2019.core> `
+:start {:x 0, :y 0},
+:obstacles
+(({:x 5, :y 8} {:x 6, :y 8} {:x 6, :y 9} {:x 5, :y 9})
+({:x 4, :y 2} {:x 6, :y 2} {:x 6, :y 7} {:x 4, :y 7})),
+:boosts
+({:type "X", :point {:x 0, :y 9}}
+{:type "L", :point {:x 0, :y 3}}
+{:type "F", :point {:x 1, :y 2}}
+{:type "F", :point {:x 0, :y 2}}
+{:type "B", :point {:x 1, :y 1}}
+{:type "B", :point {:x 0, :y 1}})}
+icfp-2019.core>``` 
 
 Using records might be overkill but it helps me think for now. 
