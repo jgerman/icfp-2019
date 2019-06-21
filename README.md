@@ -20,7 +20,8 @@ icfp-2019.core> (task/read-task sample-task)
 {:type "F", :point {:x 0, :y 2}}
 {:type "B", :point {:x 1, :y 1}}
 {:type "B", :point {:x 0, :y 1}})}
-icfp-2019.core>``` 
+icfp-2019.core>
+``` 
 
 Using records might be overkill but it helps me think for now. 
 
@@ -29,4 +30,5 @@ Using records might be overkill but it helps me think for now.
 Added the initial problem files and a function to read a task from them, e.x.:
 
 ```clojure
-(task/resource->task "part-1-intiial/prob-001.desc")```
+(task/resource->task "part-1-intiial/prob-001.desc")
+```
