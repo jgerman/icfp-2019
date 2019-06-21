@@ -1,8 +1,10 @@
 (ns icfp-2019.task
   (:require [clojure.java.io :as io]
+            [clojure.math.numeric-tower :as math]
             [clojure.string :as str]
             [instaparse.core :as insta]
-            [clojure.java.io :as io]))
+            [clojure.java.io :as io])
+  (:import java.awt.Polygon))
 
 (def task-parser
   (insta/parser
@@ -79,3 +81,85 @@
       io/resource
       slurp
       read-task))
+
+;; I don't want to lose the pure clj fields
+;; so I'm adding fields as java polys for hit detection
+
+;; utilities
+;; TODO move someplace appropriate later
+
+(defn distance [p1 p2]
+  (let [x1 (first p1)
+        x2 (first p2)
+        y1 (second p1)
+        y2 (second p2)]
+    (math/sqrt (+ (math/expt (- x2 x1) 2)
+                  (math/expt (- y2 y1) 2)))))
+
+
+(defn find-closest [x y points]
+  (apply min-key (partial distance [x y]) points))
+
+(defn in-poly? [poly x y]
+  (.contains poly x y))
+
+(defn in-mine? [task x y]
+  (in-poly? (:mine-poly task) x y))
+
+(defn in-obstacle? [task x y]
+  (when (:obstacle-polys task)
+      (every? true?
+              (map #(in-poly? % x y) (:obstacle-polys task)))))
+
+(defn is-open? [task x y]
+  (and (in-mine? task x y)
+       (not (in-obstacle? task x y))))
+
+(defn task->open-floor
+  "Given a task provides a list of points that are 'open floor'."
+  [task]
+  (let [bounding-box (.getBounds (:mine-poly task))
+        height (.getHeight bounding-box)
+        width (.getWidth bounding-box)]
+    (filter #(is-open? task (first %) (second %))
+            (for [x (range width)
+                  y (range height)]
+              [x y]))))
+
+
+(defn create-polygon [point-list]
+  (let [points (map vals point-list)
+        polygon (Polygon.)]
+    (doseq [p points]
+      (.addPoint polygon (first p) (second p)))
+    polygon))
+
+(defn add-mine-poly [task]
+  (assoc task :mine-poly (create-polygon (:mine task))))
+
+(defn add-obstacle-poly [task ob]
+  (let [polygon (create-polygon ob)]
+    (assoc task :obstacle-polys (conj (:obstacle-polys task)
+                                      polygon))))
+
+(defn add-obstacle-polys [task]
+  (let [obstacles (:obstacles task)]
+    (reduce add-obstacle-poly task obstacles)))
+
+(defn add-open-floor [task]
+  (assoc task :open-floor (task->open-floor task)))
+
+(defn task->poly-representation [task]
+  (-> task
+      add-mine-poly
+      add-obstacle-polys
+      add-open-floor))
+
+(defn resource->full-poly [resource]
+  (-> resource
+      resource->task
+      task->poly-representation))
+
+
+
+
