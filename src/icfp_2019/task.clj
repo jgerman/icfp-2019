@@ -1,6 +1,8 @@
 (ns icfp-2019.task
-  (:require [clojure.string :as str]
-            [instaparse.core :as insta]))
+  (:require [clojure.java.io :as io]
+            [clojure.string :as str]
+            [instaparse.core :as insta]
+            [clojure.java.io :as io]))
 
 (def task-parser
   (insta/parser
@@ -64,3 +66,9 @@
 (defn read-task [task]
   (let [task-ast (task-parser task)]
     (reduce apply-node (map->Task {}) task-ast)))
+
+(defn resource->task [resource]
+  (-> resource
+      io/resource
+      slurp
+      read-task))
