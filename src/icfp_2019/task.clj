@@ -107,7 +107,7 @@
   (in-poly? (:mine-poly task) x y))
 
 (defn in-obstacle? [task x y]
-  (when (:obstacle-polys task)
+t  (when (:obstacle-polys task)
       (every? true?
               (map #(in-poly? % x y) (:obstacle-polys task)))))
 
